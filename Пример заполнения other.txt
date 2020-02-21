@@ -1,0 +1,45 @@
+Без статуса (IFTTT):
+"on_off","ifttt","хук вкл","хук выкл","nostatus"
+"toggle","backlight","ifttt","хук вкл","nostatus"
+
+Без статуса (Blynk):
+"on_off","blynk","Номер пина","токен Blynk","nostatus"
+"toggle","backlight","blynk","Номер пина","токен Blynk","nostatus"
+"range","humidity",0,100,10,"blynk","Номер пина V3","токен Blynk","nostatus" тут 0 - минимальное значение, 100 - максимальное, 10 - шаг
+
+Без статуса (Any):
+"on_off","any","ссылка на вкл","ссылка на выкл","nostatus"
+"toggle","backlight","any","ссылка на вкл","nostatus"
+"range","brightness",0,100,10,"any","ссылка на управление. заменить на --val--","nostatus"
+
+Со статусом(IFTTT):
+"on_off","ifttt","хук вкл","хук выкл","status","ссылка на статус","строка поиска"
+"toggle","backlight","ifttt","хук вкл","status","ссылка на статус","строка поиска"
+
+Со статусом (Blynk):
+"on_off","blynk","Номер пина","токен Blynk","status"
+"toggle","backlight","blynk","Номер пина","токен Blynk","status"
+"range","humidity",0,100,10,"blynk","Номер пина V3","токен Blynk","status" тут 0 - минимальное значение, 100 - максимальное, 10 - шаг
+
+Со статусом (Any):
+"on_off","any","ссылка на вкл","ссылка на выкл","status","ссылка на статус","строка поиска"
+"toggle","backlight","any","ссылка на вкл","status","ссылка на статус","строка поиска"
+"range","brightness",0,100,10,"any","ссылка на управление, заменить на --val--","status","ссылка на статус",строка поиска начальная,строка поиска конечная
+
+
+Интенсы для "toggle":
+"backlight" - подсветка
+"controls_locked" - блокировка управления
+"ionization" - ионизация
+"keep_warm" - включение поддержания тепла
+"mute" - режим "без звука"
+"oscillation" - включение вращения
+"pause" - пауза
+
+Интенсы для "range":
+"brightness" - яркость в %
+"open" - открытие в %
+"humidity" - влажность в %
+"temperature" - температура в градусах цельсия
+"channel" - канал без ед. изм.
+"volume" - громкость без ед. изм.
