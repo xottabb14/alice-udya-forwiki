@@ -5,7 +5,7 @@ import requests
 import string
 
 ifttt_token = config.ifttt_token
-blynk_serv = config.blink_ip
+blynk_serv = config.blynk_ip
 llen = "devices.capabilities."
 
 
