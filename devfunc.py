@@ -7,7 +7,7 @@ import string
 import other
 path_devices = "devices.txt"
 ifttt_token = config.ifttt_token
-blynk_serv = config.blink_ip
+blynk_serv = config.blynk_ip
 
 #Функция запроса списка устройств
 def get_list_dev():
