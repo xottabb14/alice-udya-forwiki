@@ -111,36 +111,36 @@ def choise_url(dev_param):
 	return url_geton,url_getoff
 
 #Функция выбора устройства
-def test_dev_ctrl(dev_param,req_save,dev_id):
+def test_dev_ctrl(dev_param,req_save,dev_id,num_dev):
 	dev_type = str(dev_param[8].replace("\"","")).lower()
 	if dev_type == "выключатель" or dev_type == "розетка":
 		url_geton,url_getoff = choise_url(dev_param)
-		st_str = str(req_save['payload']['devices'][0]['capabilities'][0]['state']['value'])#request.json
+		st_str = str(req_save['payload']['devices'][num_dev]['capabilities'][0]['state']['value'])#request.json
 		if "True" in str(st_str):
 			response = requests.request("GET", url_geton)
 		elif "False" in str(st_str):
 			response = requests.request("GET", url_getoff)
 		else:
 			pass
-		ctrl_second = '{"devices": [{"id": "%s","capabilities": [{"type": "devices.capabilities.on_off","state": {"instance": "on","action_result": {"status": "DONE"}}}]}]}}' % dev_id
+		ctrl_second = '{"id": "%s","capabilities": [{"type": "devices.capabilities.on_off","state": {"instance": "on","action_result": {"status": "DONE"}}}]},' % dev_id
 	elif dev_type == "лампа":
 		url_geton,url_getoff = choise_url(dev_param)
 		if "devices.capabilities.on_off" in str(req_save['payload']['devices']):
-			st_str = str(req_save['payload']['devices'][0]['capabilities'][0]['state']['value'])#request.json
+			st_str = str(req_save['payload']['devices'][num_dev]['capabilities'][0]['state']['value'])#request.json
 			if "True" in str(st_str):
 				response = requests.request("GET", url_geton)
 			elif "False" in str(st_str):
 				response = requests.request("GET", url_getoff)
 			else:
 				pass
-			ctrl_second = '{"devices": [{"id": "%s","capabilities": [{"type": "devices.capabilities.on_off","state": {"instance": "on","action_result": {"status": "DONE"}}}]}]}}' % dev_id
+			ctrl_second = '{"id": "%s","capabilities": [{"type": "devices.capabilities.on_off","state": {"instance": "on","action_result": {"status": "DONE"}}}]},' % dev_id
 		else:
-			st_str = int(req_save['payload']['devices'][0]['capabilities'][0]['state']['value'])
+			st_str = int(req_save['payload']['devices'][num_dev]['capabilities'][0]['state']['value'])
 			url_getonB = choise_but_url(dev_param,st_str)
 			response = requests.request("GET", url_getonB)
-			ctrl_second = '{"devices": [{"id": "%s","capabilities": [{"type": "devices.capabilities.range","state": {"instance": "brightness","action_result": {"status": "DONE"}}}]}]}}' % (dev_id)
+			ctrl_second = '{"id": "%s","capabilities": [{"type": "devices.capabilities.range","state": {"instance": "brightness","action_result": {"status": "DONE"}}}]},' % (dev_id)
 	elif dev_type == "другое":
-		ctrl_second = other.control_other(dev_id,req_save,dev_param)
+		ctrl_second = other.control_other(dev_id,req_save,dev_param,num_dev)
 	else:
 		pass
 	return ctrl_second
@@ -149,17 +149,26 @@ def test_dev_ctrl(dev_param,req_save,dev_id):
 def main_for_control(req_save):
 	list_dev = get_list_dev() #список строк из devices.txt
 	request_id =functions.request_id_get()
-	ctrl_list_first='{"request_id":"%s","payload":' % request_id
+	ctrl_list_first='{"request_id":"%s","payload":{"devices": [' % request_id
 	ctrl_list_second = ""
-	id_device = str(req_save['payload']['devices'][0]['id'])
-	for str_dev in list_dev:
-		dev_param = functions.clean_text (str_dev).split(",")
-		dev_id = str(dev_param[0].replace("\"",""))
-		if id_device == dev_id:
-			ctrl_list_second = test_dev_ctrl(dev_param,req_save,dev_id)
-		else:
-			pass
-	ctrl_str = ctrl_list_first+ctrl_list_second
+	num_dev = 0
+	for numstr in list_dev:
+		for str_dev in list_dev:
+			try:
+				id_device = str(req_save['payload']['devices'][num_dev]['id'])
+				dev_param = functions.clean_text (str_dev).split(",")
+				dev_id = str(dev_param[0].replace("\"",""))
+				if id_device == dev_id:
+					ctrl_list_second_tmp = test_dev_ctrl(dev_param,req_save,dev_id,num_dev)
+					ctrl_list_second = ctrl_list_second+ctrl_list_second_tmp
+				else:
+					pass
+			except:
+				pass
+		num_dev = num_dev+1
+	ctrl_list_second = ctrl_list_second[0:(len(ctrl_list_second)-1)]
+	ctrl_str = ctrl_list_first+ctrl_list_second+']}}'
+	print ("\nОтвет____ ",ctrl_str)
 
 	return ctrl_str
 	
