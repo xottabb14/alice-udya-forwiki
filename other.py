@@ -199,17 +199,17 @@ def status_other(dev_param,dev_id,req_save):
 
 
 #функция управления
-def control_other(dev_id,req_save,dev_param):
+def control_other(dev_id,req_save,dev_param,num_dev):
 	file_capabil = str(dev_param[9].replace("\"","")) #файл с конфигом умений
 	capabilities = functions.read_list(file_capabil) #список строк умений из файла
 	#текущий интенс из запроса
-	intence_cur = str(req_save['payload']['devices'][0]['capabilities'][0]['state']['instance'])#'"on"'
+	intence_cur = str(req_save['payload']['devices'][num_dev]['capabilities'][0]['state']['instance'])#'"on"'
 	#тип умения из запроса. Например: devices.capabilities.on_off
-	type_capability = str(req_save['payload']['devices'][0]['capabilities'][0]['type'])
+	type_capability = str(req_save['payload']['devices'][num_dev]['capabilities'][0]['type'])
 	#проверяем on_off и шлем хук
 	if "devices.capabilities.on_off" in type_capability:
 		#текущее значение интенса. Например - 50
-		resp_val = str(req_save['payload']['devices'][0]['capabilities'][0]['state']['value'])
+		resp_val = str(req_save['payload']['devices'][num_dev]['capabilities'][0]['state']['value'])
 		for capabil in capabilities: #для каждой строки в файле
 
 			capabil_list = functions.clean_text (str(capabil)).split(",")#чистим от энтеров и делим параметры на список
@@ -251,7 +251,7 @@ def control_other(dev_id,req_save,dev_param):
 
 			else:
 				pass		
-		all_str = '{"devices":[{"id":"%s","capabilities":[{"type":"devices.capabilities.on_off","state":{"instance":"%s","action_result": {"status": "DONE"}}}]}]}}' % (dev_id,intence_cur)
+		all_str = '{"id":"%s","capabilities":[{"type":"devices.capabilities.on_off","state":{"instance":"%s","action_result": {"status": "DONE"}}}]},' % (dev_id,intence_cur)
 		
 	if "devices.capabilities.toggle" in type_capability:
 		for capabil in capabilities: #для каждой строки в файле
@@ -272,11 +272,11 @@ def control_other(dev_id,req_save,dev_param):
 					any_send(url_any_on)
 				else:
 					pass
-		all_str = '{"devices":[{"id":"%s","capabilities":[{"type":"devices.capabilities.toggle","state":{"instance":"%s","action_result": {"status": "DONE"}}}]}]}}' % (dev_id,intence_cur)
+		all_str = '{"id":"%s","capabilities":[{"type":"devices.capabilities.toggle","state":{"instance":"%s","action_result": {"status": "DONE"}}}]},' % (dev_id,intence_cur)
 
 	if "devices.capabilities.range" in type_capability:
 		#текущее значение интенса. Например - 50.
-		resp_val = str(req_save['payload']['devices'][0]['capabilities'][0]['state']['value'])
+		resp_val = str(req_save['payload']['devices'][num_dev]['capabilities'][0]['state']['value'])
 		for capabil in capabilities:#для каждой строки в файле
 			capabil_list = functions.clean_text(str(capabil)).split(",")
 			test_intance = str(capabil_list[1])
@@ -297,7 +297,7 @@ def control_other(dev_id,req_save,dev_param):
 					any_val_send(url_any_on,value_any)
 				else:
 					pass
-		all_str = '{"devices":[{"id":"%s","capabilities":[{"type":"devices.capabilities.range","state":{"instance":"%s","action_result": {"status": "DONE"}}}]}]}}' % (dev_id,intence_cur)
+		all_str = '{"id":"%s","capabilities":[{"type":"devices.capabilities.range","state":{"instance":"%s","action_result": {"status": "DONE"}}}]},' % (dev_id,intence_cur)
 	else:
 		pass
 	return all_str
