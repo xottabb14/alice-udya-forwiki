@@ -6,11 +6,13 @@
 "on_off","blynk","Номер пина","токен Blynk","nostatus"
 "toggle","backlight","blynk","Номер пина","токен Blynk","nostatus"
 "range","humidity",0,100,10,"blynk","Номер пина V3","токен Blynk","nostatus" тут 0 - минимальное значение, 100 - максимальное, 10 - шаг
+"color_setting",255,255,255,"blynk","V1","токен Blynk","nostatus"
 
 Без статуса (Any):
 "on_off","any","ссылка на вкл","ссылка на выкл","nostatus"
 "toggle","backlight","any","ссылка на вкл","nostatus"
 "range","brightness",0,100,10,"any","ссылка на управление. заменить на --val--","nostatus"
+"color_setting",255,255,255,"any",""ссылка на управление. заменить значение red на --vr-- значение green на --vg-- значение blue на --vb--","nostatus"
 
 Со статусом(IFTTT):
 "on_off","ifttt","хук вкл","хук выкл","status","ссылка на статус","строка поиска"
@@ -20,6 +22,7 @@
 "on_off","blynk","Номер пина","токен Blynk","status"
 "toggle","backlight","blynk","Номер пина","токен Blynk","status"
 "range","humidity",0,100,10,"blynk","Номер пина V3","токен Blynk","status" тут 0 - минимальное значение, 100 - максимальное, 10 - шаг
+"color_setting",255,255,255,"blynk","V1","токен Blynk","status"
 
 Со статусом (Any):
 "on_off","any","ссылка на вкл","ссылка на выкл","status","ссылка на статус","строка поиска"
