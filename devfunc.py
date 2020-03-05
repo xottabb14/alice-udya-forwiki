@@ -1,3 +1,4 @@
+
 #здесь выполняются функции устройств
 import functions
 import config
@@ -75,14 +76,21 @@ def choise_but_url(dev_param,st_str):
 	elif dev_ch_url == "blynk":#тут ок
 		blynk_tok = str(dev_param[11].replace("\"",""))
 		blynk_pin = str(dev_param[13].replace("\"",""))
+		blynk_max = str(dev_param[14].replace("\"",""))
 		val_br = str(st_str)
+		val_br = str(round((blynk_max/100)*int(val_br)))
 		url_geton = "http://%s/%s/update/%s?value=%s" % (blynk_serv,blynk_tok,blynk_pin,val_br)
 	elif dev_ch_url == "any":
 		stat_info = str(dev_param[12].replace("\"","")).lower()
 		st_str_str = str(st_str)
+
 		if stat_info == "status":
+			any_max = str(dev_param[19].replace("\"",""))
+			st_str_str = str(round((any_max/100)*int(st_str_str)))
 			url_geton = str(dev_param[15]).replace("\"","").replace("--val--",st_str_str)
 		else:
+			any_max = str(dev_param[14].replace("\"",""))
+			st_str_str = str(round((any_max/100)*int(st_str_str)))
 			url_geton = str(dev_param[13]).replace("\"","").replace("--val--",st_str_str)
 	else:
 		pass
@@ -235,14 +243,17 @@ def choise_status_lamp(dev_param,dev_id):
 	elif dev_ch_stat == "blynk":
 		blynk_tok = str(dev_param[11].replace("\"",""))
 		pin_brigh = str(dev_param[13].replace("\"",""))
+		blynk_max = str(dev_param[14].replace("\"",""))
 		url_brigh = 'http://%s/%s/get/%s' % (blynk_serv,blynk_tok,pin_brigh)
 		response = requests.get(url_brigh)
 		response.encoding = 'utf-8'
 		val_brigh = response.text
 		for i in ["\"","[","]"]:
 			val_brigh = val_brigh.replace(i,"")
+		val_brigh = int(round((100/blynk_max)*int(val_brigh)))
 	elif dev_ch_stat == "any":
 		#тут ваяем проверку яркости с энидевайсом
+		any_max = str(dev_param[19].replace("\"",""))
 		url_brigh = str(dev_param[16].replace("\"",""))
 		fst_str = str(dev_param[17])
 		sec_str = str(dev_param[18])
@@ -252,6 +263,7 @@ def choise_status_lamp(dev_param,dev_id):
 		indS = val_brigh.find(fst_str)+len(fst_str)
 		indE = val_brigh.find(sec_str)
 		val_brigh = int(val_brigh[indS:indE])
+		val_brigh = int(round((100/any_max)*int(val_brigh)))
 	else:
 		pass
 	url_for_stat = '{"devices":[{"id":"%s","capabilities": [{"type": "devices.capabilities.range","state": {"instance": "brightness","value": %s}},{"type": "devices.capabilities.on_off","state":{"instance": "on","value":%s}}]}]}}' % (dev_id,val_brigh,st_value)
@@ -298,3 +310,4 @@ def main_status_dev(req_save):
 	return stat_str
 
 ###############_КОНЕЦ РАЗДЕЛА ЗАПРОСА СОСТОЯНИЯ_#############
+
