@@ -6,6 +6,7 @@ import json
 import requests
 import string
 import other
+import scene
 path_devices = "devices.txt"
 ifttt_token = config.ifttt_token
 blynk_serv = config.blynk_ip
@@ -36,6 +37,9 @@ def return_capabilities(dev_type,dev_param,device_list_second):
 			device_list_second = device_list_second+','
 	elif dev_type == "другое":
 		device_list_second = device_list_second+other.other_dev_main(dev_param)
+		device_list_second = device_list_second+','
+	elif dev_type == "сцена":
+		device_list_second = device_list_second+'{"id":%s,"name":%s,"description":%s,"room":%s,"type":"devices.types.switch","capabilities":[{"type":"devices.capabilities.on_off","retrievable":true}],"device_info":{"manufacturer":%s,"model":%s,"hw_version":%s,"sw_version":%s}}' % (str(dev_param[0]),str(dev_param[1]),str(dev_param[2]),str(dev_param[3]),str(dev_param[4]),str(dev_param[5]),str(dev_param[6]),str(dev_param[7]))
 		device_list_second = device_list_second+','
 	else:
 		pass
@@ -149,6 +153,8 @@ def test_dev_ctrl(dev_param,req_save,dev_id,num_dev):
 			ctrl_second = '{"id": "%s","capabilities": [{"type": "devices.capabilities.range","state": {"instance": "brightness","action_result": {"status": "DONE"}}}]},' % (dev_id)
 	elif dev_type == "другое":
 		ctrl_second = other.control_other(dev_id,req_save,dev_param,num_dev)
+	elif dev_type == "сцена":
+		ctrl_second = scene.control_scene(dev_id,req_save,dev_param,num_dev)
 	else:
 		pass
 	return ctrl_second
@@ -286,6 +292,8 @@ def test_dev_stat(dev_param,req_save,dev_id):
 			url_for_stat = '{"devices":[{"id":"%s","capabilities": [{"type": "devices.capabilities.range","state": {"instance": "brightness","value": 100}},{"type": "devices.capabilities.on_off","state":{"instance": "on","value":false}}]}]}}' % dev_id
 	elif dev_type == "другое":
 		url_for_stat = other.status_other(dev_param,dev_id,req_save)
+	elif dev_type == "сцена":
+		url_for_stat = '{"devices":[{"id":"%s","capabilities": [{"type": "devices.capabilities.on_off","state":{"instance": "on","value":false}}]}]}}' % dev_id
 	else:
 		pass
 	return url_for_stat
